@@ -5,7 +5,8 @@
         placeholder="O que necessitas fazer?"
         type="text"
         name="inputToDo"
-        v-model="input"
+        :value="inputTask"
+        @input="$emit('update:inputTask', $event.target.value)"
         class="input-task"
       />
       <button type="submit" @click="buttonClicked()" class="button-submit">
@@ -15,16 +16,15 @@
   </div>
 </template>
 <script setup>
-import { ref, defineEmits } from "vue";
+import { defineEmits, defineProps } from "vue";
 
-const emits = defineEmits(["is-clicked"]);
+const props = defineProps(["inputTask"]);
 
-var input = ref("");
+const emits = defineEmits(["is-clicked", "update:inputTask"]);
 
 function buttonClicked() {
-  if (input.value !== "") {
-    emits("is-clicked", input.value);
-    input.value = "";
+  if (props.inputTask !== "") {
+    emits("is-clicked");
   }
 }
 </script>

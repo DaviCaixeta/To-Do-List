@@ -1,12 +1,12 @@
 <template>
-  <div v-bind:class="showModal">
+  <div class="modal-on" @click.prevent.self="$emit('cancel-modal')">
     <div class="modal-content">
       <div class="modal-body">
         <p class="modal-text">Tem certeza que deseja remover essa atividade?</p>
-        <button class="buttons-modal" @click="emitModal(true)">
+        <button class="buttons-modal" @click="$emit('close-modal')">
           Confirmar
         </button>
-        <button class="buttons-modal" @click="emitModal(false)">
+        <button class="buttons-modal" @click="$emit('cancel-modal')">
           Cancelar
         </button>
       </div>
@@ -15,22 +15,9 @@
 </template>
 
 <script setup>
-import { computed, defineProps, defineEmits } from "vue";
+import { defineEmits } from "vue";
 
-const props = defineProps(["modal"]);
-const emits = defineEmits(["modal-hidden", "task-remove"]);
-
-const showModal = computed(function () {
-  return props.modal === true ? "modal-on" : "modal-off";
-});
-
-function emitModal(boolean) {
-  if (boolean === true) {
-    emits("task-remove");
-  } else {
-    emits("modal-hidden");
-  }
-}
+defineEmits(["close-modal", "cancel-modal"]);
 </script>
 
 <style scoped>
@@ -43,9 +30,6 @@ function emitModal(boolean) {
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.4);
-}
-.modal-off {
-  display: none;
 }
 .modal-content {
   min-width: 370px;

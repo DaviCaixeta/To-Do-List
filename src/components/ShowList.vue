@@ -3,16 +3,21 @@
     <h2 class="title-tasks">Tarefas</h2>
     <ul class="to-do-list">
       <li
-        v-for="(toDo, index) in props.listaAfazeres"
+        v-for="(toDo, index) in listaAfazeres"
         :key="toDo.name"
         class="each-to-do"
       >
         {{ toDo.name }}
-        <button class="delete-button" @click="toggleModal = true">X</button>
+        <button
+          class="delete-button"
+          @click="(toggleModal = true), (posicao = index)"
+        >
+          X
+        </button>
         <ModalConfirm
-          :modal="toggleModal"
-          @task-remove="toDoRemove(index)"
-          @modal-hidden="changeModal"
+          v-if="toggleModal"
+          @close-modal="toDoRemove(posicao)"
+          @cancel-modal="toggleModal = false"
         ></ModalConfirm>
       </li>
     </ul>
@@ -22,22 +27,18 @@
 import ModalConfirm from "./ModalConfirm.vue";
 import { ref, defineProps, defineEmits } from "vue";
 
-const props = defineProps({
+defineProps({
   listaAfazeres: Array,
 });
 
 const emits = defineEmits(["delete-task"]);
 
-var toggleModal = ref(false);
+const toggleModal = ref(false);
 
-function changeModal() {
-  toggleModal.value = !toggleModal.value;
-}
-
-function toDoRemove(index) {
+const toDoRemove = (index) => {
   emits("delete-task", index);
-  toggleModal.value = !toggleModal.value;
-}
+  toggleModal.value = false;
+};
 </script>
 
 <style scoped>
